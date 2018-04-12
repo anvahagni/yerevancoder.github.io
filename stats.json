@@ -13,8 +13,8 @@
       "path---2018-02-08-js-types-primitives-variable-initialization-b090fd0e2da58f50b156.js.map"
     ],
     "component---src-pages-index-js": [
-      "component---src-pages-index-js-0fe7da04f14c43b68f06.js",
-      "component---src-pages-index-js-0fe7da04f14c43b68f06.js.map"
+      "component---src-pages-index-js-b1c70ed4bd1e8537b148.js",
+      "component---src-pages-index-js-b1c70ed4bd1e8537b148.js.map"
     ],
     "path---2018-01-09-pay-rates-in-armenian-tech": [
       "path---2018-01-09-pay-rates-in-armenian-tech-961989e238e7926e05ef.js",
@@ -31,6 +31,10 @@
     "path---2017-12-24-squash-commits-with-git": [
       "path---2017-12-24-squash-commits-with-git-0d4a525d211d3b1e94ca.js",
       "path---2017-12-24-squash-commits-with-git-0d4a525d211d3b1e94ca.js.map"
+    ],
+    "path---latest-news": [
+      "path---latest-news-a0e39f21c11f6a62c5ab.js",
+      "path---latest-news-a0e39f21c11f6a62c5ab.js.map"
     ],
     "path---2018-02-06-simple-terminal-commands": [
       "path---2018-02-06-simple-terminal-commands-dd334f318a4e509c2e5f.js",
@@ -52,9 +56,9 @@
       "component---src-pages-hiring-board-job-index-js-0a0108488d1d925a722f.js",
       "component---src-pages-hiring-board-job-index-js-0a0108488d1d925a722f.js.map"
     ],
-    "component---src-pages-news-js": [
-      "component---src-pages-news-js-a299959a2613ab9440a8.js",
-      "component---src-pages-news-js-a299959a2613ab9440a8.js.map"
+    "path---news-posting": [
+      "path---news-posting-a0e39f21c11f6a62c5ab.js",
+      "path---news-posting-a0e39f21c11f6a62c5ab.js.map"
     ],
     "path---2018-03-13-how-yerevan-coder-works": [
       "path---2018-03-13-how-yerevan-coder-works-3a32bf6a1a6061de40bc.js",
@@ -75,6 +79,10 @@
     "path---2018-04-05-how-yerevan-coder-works-part-two": [
       "path---2018-04-05-how-yerevan-coder-works-part-two-b489ecee537f47e77dc9.js",
       "path---2018-04-05-how-yerevan-coder-works-part-two-b489ecee537f47e77dc9.js.map"
+    ],
+    "component---src-pages-latest-news-index-js": [
+      "component---src-pages-latest-news-index-js-accd53d105fd12b480b7.js",
+      "component---src-pages-latest-news-index-js-accd53d105fd12b480b7.js.map"
     ],
     "component---src-templates-blog-post-js": [
       "component---src-templates-blog-post-js-0af96f7020a1b2b37af1.js",
@@ -117,13 +125,13 @@
       "component---src-pages-404-js-78eb0160ebc5e112276c.js.map"
     ],
     "component---src-pages-available-for-work-js": [
-      "component---src-pages-available-for-work-js-a645afe269b6d8955fc8.js",
-      "component---src-pages-available-for-work-js-a645afe269b6d8955fc8.js.map"
+      "component---src-pages-available-for-work-js-af7e90498276003c5a1c.js",
+      "component---src-pages-available-for-work-js-af7e90498276003c5a1c.js.map"
     ],
     "commons": [
-      "commons-fab1c9ded6dfc2a07451.js",
+      "commons-6580ccff1d0aa7e24da3.js",
       "build-js-styles.css",
-      "commons-fab1c9ded6dfc2a07451.js.map",
+      "commons-6580ccff1d0aa7e24da3.js.map",
       "build-js-styles.css.map"
     ],
     "path---404-html": [
@@ -142,10 +150,6 @@
       "path---2017-12-23-tech-places-and-events-8c4af33476f8f89bdc0c.js",
       "path---2017-12-23-tech-places-and-events-8c4af33476f8f89bdc0c.js.map"
     ],
-    "path---news": [
-      "path---news-a0e39f21c11f6a62c5ab.js",
-      "path---news-a0e39f21c11f6a62c5ab.js.map"
-    ],
     "path---available-for-work": [
       "path---available-for-work-a0e39f21c11f6a62c5ab.js",
       "path---available-for-work-a0e39f21c11f6a62c5ab.js.map"
@@ -157,6 +161,10 @@
     "path---2018-03-06-this-js-context": [
       "path---2018-03-06-this-js-context-981a8233eb80f6812fbd.js",
       "path---2018-03-06-this-js-context-981a8233eb80f6812fbd.js.map"
+    ],
+    "component---src-pages-news-posting-index-js": [
+      "component---src-pages-news-posting-index-js-62e4c1c7d9264022b7cd.js",
+      "component---src-pages-news-posting-index-js-62e4c1c7d9264022b7cd.js.map"
     ],
     "path---hiring-board": [
       "path---hiring-board-a0e39f21c11f6a62c5ab.js",
@@ -171,9 +179,9 @@
       "path---2018-01-12-promises-and-timeouts-85cbf39e23988a91cc19.js.map"
     ],
     "app": [
-      "app-7467274ebe0aa3a08697.js",
+      "app-8dc9f2692d11bda24bc8.js",
       "build-js-styles.css",
-      "app-7467274ebe0aa3a08697.js.map",
+      "app-8dc9f2692d11bda24bc8.js.map",
       "build-js-styles.css.map"
     ],
     "path---2018-03-04-js-function-declaration-and-function-expression": [
@@ -193,8 +201,8 @@
       "path---2018-03-27-ecmascript-6-part-1-0bc1a3c758f8d6ee7a51.js.map"
     ],
     "component---src-pages-hiring-board-js": [
-      "component---src-pages-hiring-board-js-94b601ea820ccb78a557.js",
-      "component---src-pages-hiring-board-js-94b601ea820ccb78a557.js.map"
+      "component---src-pages-hiring-board-js-5a09035bdaf30b39de7f.js",
+      "component---src-pages-hiring-board-js-5a09035bdaf30b39de7f.js.map"
     ]
   }
 }
