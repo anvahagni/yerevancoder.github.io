@@ -1,0 +1,9 @@
+.DedicatedJobPost {
+  height:100vh;
+}
+
+@media (max-width: 649px) {
+  .DedicatedJobPost {
+    height: unset;
+  }
+}

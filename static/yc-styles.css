@@ -582,6 +582,7 @@ form > fieldset {
 .ApplicationContainer__Container {
   display:flex;
   padding:0;
+  height:100vh;
 }
 
 .Profile__Container > * {

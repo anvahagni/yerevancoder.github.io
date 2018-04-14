@@ -4,9 +4,11 @@ import Spinner from 'react-spinkit';
 import { hiring_table_posts_ref } from '../../../utils/db';
 import JobPost from '../../../components/job-post';
 import { SPACER_10_H } from '../../../utils/constants';
+import styles from './index.module.css';
 
-const JOB_WRAPPER_CLASSES =
-  'PlainFlexColumn PlainFlexCentered FifteenPaddingLeft MobileRemoveFifteenPaddingLeft';
+const JOB_WRAPPER_CLASSES = `PlainFlexColumn PlainFlexCentered FifteenPaddingLeft MobileRemoveFifteenPaddingLeft ${
+  styles.DedicatedJobPost
+}`;
 
 export default class DedicatedJobPost extends React.Component {
   state = { job: null };
