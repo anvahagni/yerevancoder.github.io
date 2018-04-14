@@ -1,0 +1,36 @@
+.FilterControl__TriggerMessage {
+  color:white;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.2rem;
+}
+
+.BlogTable {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+}
+
+.FilterControlWrapper {
+  border-radius:5px;
+  /* background-color:var(--material-blue-heavy-fade); */
+  background-color: hsla(222.62, 25.7%, 29%, 0.4);
+  padding: 7px 14px;
+  margin-right:1.5rem;
+  align-self:flex-start;
+}
+
+
+@media (max-width: 649px) {
+
+  .FilterControl__TriggerMessageTooltip {
+    display:none;
+  }
+
+  .FilterControlWrapper {
+    margin:0;
+    padding:0;
+    padding: 5px;
+  }
+
+}

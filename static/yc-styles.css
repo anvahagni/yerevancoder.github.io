@@ -51,11 +51,6 @@ body {
   cursor:pointer;
 }
 
-.FilterControl__TriggerMessage {
-  color:white;
-  font-family: 'Titillium Web', sans-serif;
-  font-size: 1.2rem;
-}
 
 .FreelancerTable__DedicatedLink {
   font-family: 'Titillium Web', sans-serif;
@@ -72,13 +67,6 @@ body {
   flex-wrap:wrap;
 }
 
-.FilterControlWrapper {
-  border-radius:5px;
-  background-color:var(--material-blue-heavy-fade);
-  padding: 7px 14px;
-  margin-right:1.5rem;
-  align-self:flex-start;
-}
 
 .AlignSelfFlexStart {
   align-self:flex-start;
@@ -546,13 +534,6 @@ form > fieldset {
   margin-bottom:1rem;
 }
 
-.BlogTable {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
-}
-
 .FreelancerTable__Freelancer:nth-child(2n + 1) {
   background-color:var(--material-grey-heavy-fade);
 }
@@ -799,19 +780,8 @@ legend {
     padding-left:0;
   }
 
-	.FilterControl__TriggerMessageTooltip {
-		display:none;
-	}
-
-
   .ModalContentWrapper {
     width:250px;
-  }
-
-  .FilterControlWrapper {
-    margin:0;
-    padding:0;
-    padding: 5px;
   }
 
   .FilterControl__FilterRow {

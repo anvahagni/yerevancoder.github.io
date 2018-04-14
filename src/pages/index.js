@@ -6,16 +6,16 @@ import Collapsible from 'react-collapsible';
 
 import BlogCardBanner from '../components/blog-card-banner';
 import FilterControl from '../components/filter-control';
-
+import styles from './index.module.css';
 // import 'prismjs/themes/prism-solarizedlight.css';
 
 const TRIGGER = (
-  <span className={'FilterControl__TriggerMessage'}>
+  <span className={styles.FilterControl__TriggerMessage}>
     Filter by topic tags
     <span
       data-balloon={'Click to toggle filter tags'}
       data-ballon-pos={'right'}
-      className={'FilterControl__TriggerMessageTooltip'}
+      className={styles.FilterControl__TriggerMessageTooltip}
     />
   </span>
 );
@@ -83,9 +83,9 @@ export default class BlogIndex extends React.Component {
     const classes =
       'AvailableForWorkContainer__PageBanner AlignSelfFlexStart LeftMinorOneHalfRemPadding';
     return (
-      <div className={'BlogTable'}>
+      <div className={styles.BlogTable}>
         <h4 className={classes}>{`${post_banners.length} great posts to read`}</h4>
-        <div className={'FilterControlWrapper LeftMinorOneHalfRemMargin'}>
+        <div className={`${styles.FilterControlWrapper} LeftMinorOneHalfRemMargin`}>
           <Collapsible trigger={TRIGGER}>
             <FilterControl
               known_tags={this.state.known_tags}
