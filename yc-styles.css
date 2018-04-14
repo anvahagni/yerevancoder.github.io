@@ -934,6 +934,7 @@ legend {
 
   .ApplicationContainer__Container {
     flex-direction:column;
+    height:unset;
     padding:4px;
   }
 
