@@ -27,7 +27,7 @@ export const modal_s = {
 export const ROUTES = {
   JOBS_TABLE: '/hiring-board',
   NEW_JOB_POSTING: '/new-job-posting',
-  NEWS: '/news',
+  LATEST_NEWS: '/latest-news',
   AVAILABLE_FOR_WORK: '/available-for-work',
 };
 
@@ -233,4 +233,4 @@ export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*
 
 export const EMAIL_NEW_JOB_SUBJECT = encodeURI(`I saw your job posted on yerevancoder.com`);
 
-export const NEWS_POSTINGS_PER_PAGE = 12;
+export const NEWS_POSTINGS_PER_PAGE = 3;

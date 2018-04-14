@@ -11,6 +11,7 @@ import {
   firebase,
   hiring_table_posts_ref,
   news_postings_ref,
+  total_news_posting_count_ref,
 } from '../utils/db';
 import FixedSidebar from '../components/fixed-sidebar';
 import MobileBar from '../components/mobile-bar';
@@ -125,10 +126,21 @@ export default class ApplicationRoot extends React.Component {
           updates[`/users/${uid}/my-hiring-board-submissions/${new_post_key}`] = with_info;
           return db.ref().update(updates);
         }),
-      submit_new_news_post: posting =>
-        news_postings_ref.push(posting).then(reply => {
-          //
-        }),
+      submit_new_news_post: async news_post => {
+        const { uid } = this.state.authenticated_user;
+        const reply = await news_postings_ref.push();
+        const current_count = await total_news_posting_count_ref
+          .once('value')
+          .then(snap_shot => Number(snap_shot.val()));
+        console.log({ current_count });
+        const new_post_key = reply.key;
+        const updates = {};
+        const with_info = { ...news_post, post_key: new_post_key, post_creation_id: current_count };
+        updates['/total_news_posting_count'] = current_count + 1;
+        updates[`/news_postings/${new_post_key}`] = with_info;
+        updates[`/users/${uid}/my-news-submissions/${new_post_key}`] = with_info;
+        return db.ref().update(updates);
+      },
     };
   }
 
