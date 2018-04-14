@@ -6,6 +6,7 @@ import Collapsible from 'react-collapsible';
 
 import BlogCardBanner from '../components/blog-card-banner';
 import FilterControl from '../components/filter-control';
+import { SPACER_10_H } from '../utils/constants';
 import styles from './index.module.css';
 // import 'prismjs/themes/prism-solarizedlight.css';
 
@@ -21,8 +22,8 @@ const TRIGGER = (
 );
 
 export default class BlogIndex extends React.Component {
-  constructor(p, context) {
-    super(p, context);
+  constructor(p) {
+    super(p);
     const { edges } = this.props.data.allMarkdownRemark;
     const names_set = new Set();
     edges.forEach(({ node }) => {
@@ -84,7 +85,9 @@ export default class BlogIndex extends React.Component {
       'AvailableForWorkContainer__PageBanner AlignSelfFlexStart LeftMinorOneHalfRemPadding';
     return (
       <div className={styles.BlogTable}>
+        {SPACER_10_H}
         <h4 className={classes}>{`${post_banners.length} great posts to read`}</h4>
+        {SPACER_10_H}
         <div className={`${styles.FilterControlWrapper} LeftMinorOneHalfRemMargin`}>
           <Collapsible trigger={TRIGGER}>
             <FilterControl
