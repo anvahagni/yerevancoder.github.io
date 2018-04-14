@@ -4,7 +4,14 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import Headroom from 'react-headroom';
 
-import { auth, freelancers_posts_ref, db, firebase, hiring_table_posts_ref } from '../utils/db';
+import {
+  auth,
+  freelancers_posts_ref,
+  db,
+  firebase,
+  hiring_table_posts_ref,
+  news_postings_ref,
+} from '../utils/db';
 import FixedSidebar from '../components/fixed-sidebar';
 import MobileBar from '../components/mobile-bar';
 import { global_styles, ROUTES, EMPTY_DIV } from '../utils/constants';
@@ -32,6 +39,7 @@ export default class ApplicationRoot extends React.Component {
     sign_user_out: PropTypes.func,
     submit_new_freelancer_post: PropTypes.func,
     submit_new_hiring_post: PropTypes.func,
+    submit_new_news_post: PropTypes.func,
   };
 
   pass_through = ({
@@ -117,6 +125,10 @@ export default class ApplicationRoot extends React.Component {
           updates[`/users/${uid}/my-hiring-board-submissions/${new_post_key}`] = with_info;
           return db.ref().update(updates);
         }),
+      submit_new_news_post: posting =>
+        news_postings_ref.push(posting).then(reply => {
+          //
+        }),
     };
   }
 
@@ -133,6 +145,7 @@ export default class ApplicationRoot extends React.Component {
       <div className={'ApplicationContainer__Container'}>
         <Helmet title={site_title}>
           {global_styles}
+          <link rel={'stylesheet'} href={'/normalize.css'} />
           <link rel={'stylesheet'} href={'/yc-styles.css'} />
           <link
             href={'https://fonts.googleapis.com/css?family=Montserrat|Titillium+Web'}
