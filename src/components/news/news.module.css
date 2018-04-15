@@ -5,3 +5,7 @@
 .TempTestContainer {
   background-color:hsla(170, 50%, 50%, 1.0);
 }
+
+.ErrorOccured {
+  color:red;
+}

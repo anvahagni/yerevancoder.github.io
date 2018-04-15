@@ -1,6 +1,6 @@
 import { firebase, db } from './db';
 import {
-  COMPUTED_POSTS_CLOUD_FUNCTION_DEV,
+  COMPUTED_POSTS_CLOUD_FUNCTION_LOCALHOST,
   __DEV__,
   COMPUTED_POSTS_CLOUD_FUNCTION,
 } from './constants';
@@ -41,7 +41,7 @@ export const computed_news_posts = ({ page_index, count_per_page }) => {
   params.append('page_index', page_index);
   params.append('count_per_page', count_per_page);
   const query = `${
-    __DEV__ ? COMPUTED_POSTS_CLOUD_FUNCTION_DEV : COMPUTED_POSTS_CLOUD_FUNCTION
+    __DEV__ ? COMPUTED_POSTS_CLOUD_FUNCTION_LOCALHOST : COMPUTED_POSTS_CLOUD_FUNCTION
   }?${params.toString()}`;
   return fetch(query).then(r => r.json());
 };

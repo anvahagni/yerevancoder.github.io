@@ -235,7 +235,10 @@ export const EMAIL_NEW_JOB_SUBJECT = encodeURI(`I saw your job posted on yerevan
 
 export const NEWS_POSTINGS_PER_PAGE = 6;
 
-export const COMPUTED_POSTS_CLOUD_FUNCTION_DEV =
+export const COMPUTED_POSTS_CLOUD_FUNCTION_LOCALHOST =
+  'http://localhost:5000/yerevan-coder-62f6c/us-central1/posts_with_computed_scores';
+
+export const COMPUTED_POSTS_CLOUD_FUNCTION_STAGING =
   'https://us-central1-yerevan-coder-62f6c.cloudfunctions.net/posts_with_computed_scores';
 
 export const COMPUTED_POSTS_CLOUD_FUNCTION = '';

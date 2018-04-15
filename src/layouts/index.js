@@ -132,7 +132,6 @@ export default class ApplicationRoot extends React.Component {
         const current_count = await total_news_posting_count_ref
           .once('value')
           .then(snap_shot => Number(snap_shot.val()));
-        console.log({ current_count });
         const new_post_key = reply.key;
         const updates = {};
         const with_info = { ...news_post, post_key: new_post_key, post_creation_id: current_count };

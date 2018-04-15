@@ -9,57 +9,125 @@ const chunk = require('lodash/chunk');
 admin.initializeApp();
 
 const calculate_score = (votes, item_hour_age, gravity = 1.8) =>
-  (votes - 1) / Math.pow(item_hour_age + 2, gravity);
+  (votes - 1) / Math.pow(Math.abs(item_hour_age) + 2, gravity);
 
 const obj_to_array = obj =>
   Object.keys(obj).map(key => Object.assign({}, obj[key], { post_key: key }));
 
-exports.posts_with_computed_scores = functions.https.onRequest((request, response) => {
-  const { page_index, count_per_page } = request.query;
+const all_news_snapshot = () =>
   admin
     .database()
     .ref('/news_postings')
+    .orderByChild('ranking_score')
     .once('value')
     .then(snapshot => snapshot.val())
-    .then(home_page_posts => {
-      if (home_page_posts === null) {
-        return cors(request, response, () => response.end(JSON.stringify({ result: [] })));
-      } else {
-        const now = new Date();
-        const posts = obj_to_array(home_page_posts);
-        const mapped = posts.map((post, index) => {
-          const their_time = new Date(post.posted_at);
-          const day_diff = differenceInDays(their_time, now);
-          const hour_diff = differenceInHours(their_time, now);
-          const minute_diff = differenceInMinutes(their_time, now);
-          const ranking_score = calculate_score(post.up_votes, hour_diff);
-          return { day_diff, hour_diff, minute_diff, ranking_score, index, post };
-        });
-        mapped.sort(
-          ({ ranking_score: ranking_score_first }, { ranking_score: ranking_score_second }) => {
-            if (ranking_score_first > ranking_score_second) return -1;
-            if (ranking_score_first < ranking_score_second) return 1;
-            return 0;
-          }
-        );
-        const with_scores = mapped.map(
-          ({ index, day_diff, hour_diff, minute_diff, ranking_score }) => {
-            const post = posts[index];
-            post.day_diff = day_diff;
-            post.hour_diff = hour_diff;
-            post.minute_diff = minute_diff;
-            post.ranking_score = ranking_score;
-            return post;
-          }
-        );
-        const result = chunk(with_scores, Number(count_per_page));
-        const choice = result[Number(page_index)];
-        return cors(request, response, () =>
-          response.end(JSON.stringify({ result: choice !== undefined ? choice : [] }))
-        );
+    .then(rows => (rows !== null ? rows : []));
+
+const compute_scores = () =>
+  all_news_snapshot().then(rows => {
+    const now = new Date();
+    const posts = obj_to_array(rows);
+    const mapped = posts.map((post, index) => {
+      const their_time = new Date(post.posted_at);
+      const day_diff = differenceInDays(their_time, now);
+      const hour_diff = differenceInHours(their_time, now);
+      const minute_diff = differenceInMinutes(their_time, now);
+      const ranking_score = calculate_score(post.up_votes, hour_diff);
+      return { day_diff, hour_diff, minute_diff, ranking_score, index, post };
+    });
+    mapped.sort(
+      ({ ranking_score: ranking_score_first }, { ranking_score: ranking_score_second }) => {
+        if (ranking_score_first > ranking_score_second) return -1;
+        if (ranking_score_first < ranking_score_second) return 1;
+        return 0;
       }
+    );
+    return mapped.map(({ index, day_diff, hour_diff, minute_diff, ranking_score }) => {
+      const post = posts[index];
+      post.day_diff = day_diff;
+      post.hour_diff = hour_diff;
+      post.minute_diff = minute_diff;
+      post.ranking_score = ranking_score;
+      return post;
+    });
+  });
+
+const computed_scores_for_db_update = (now, accum, current_value) => {
+  const { post_key, up_votes, posted_at } = current_value;
+  const hour_diff = differenceInHours(new Date(posted_at), now);
+  current_value.ranking_score = calculate_score(up_votes, hour_diff);
+  accum[`/news_postings/${post_key}`] = current_value;
+  return accum;
+};
+
+const total_count_news_count = () =>
+  admin
+    .database()
+    .ref('total_news_posting_count')
+    .once('value')
+    .then(snap_shot => Number(snap_shot.val()));
+
+const home_page_snapshot = limit =>
+  admin
+    .database()
+    .ref('/news_postings')
+    .orderByChild('ranking_score')
+    .limitToLast(limit)
+    .once('value')
+    .then(snapshot => snapshot.val());
+
+const last_time_computed_scores_snapshot = () =>
+  admin
+    .database()
+    .ref('/last-time-recomputed-scores')
+    .once('value')
+    .then(snapshot => snapshot.val());
+
+exports.posts_with_computed_scores = functions.https.onRequest((request, response) => {
+  const { page_index, count_per_page } = request.query;
+  last_time_computed_scores_snapshot()
+    .then(last_time => Promise.all([new Date(last_time), new Date(), total_count_news_count()]))
+    .then(([last_time, now, total_count]) => {
+      const total_pages_count = Math.ceil(total_count / count_per_page);
+      return Promise.all([
+        Math.abs(differenceInMinutes(now, last_time)) >= 3,
+        page_index + 1 >= total_pages_count || page_index == 0 || page_index == 1,
+      ]);
+    })
+    .then(([needs_hard_recompute, use_home_page]) => {
+      if (needs_hard_recompute === false && use_home_page === true) {
+        return Promise.all([
+          needs_hard_recompute,
+          home_page_snapshot(count_per_page),
+          use_home_page,
+        ]);
+      } else if (needs_hard_recompute === true && use_home_page === true) {
+        return Promise.all([needs_hard_recompute, compute_scores(), use_home_page]);
+      } else if (needs_hard_recompute === true && use_home_page === false) {
+        return Promise.all([needs_hard_recompute, compute_scores(), use_home_page]);
+      } else {
+        // needs_hard_recompute === false && use_home_page === false
+        return Promise.all([needs_hard_recompute, []]);
+      }
+    })
+    .then(([needs_hard_recompute, posts_results, use_home_page]) => {
+      console.log({ posts_results });
+      const grouped = chunk(posts_results, Number(count_per_page));
+      const result = use_home_page
+        ? grouped[0] !== undefined ? grouped[0] : []
+        : grouped[Number(page_index)];
+      return Promise.all([
+        needs_hard_recompute,
+        // Give back the data asap
+        cors(request, response, () => response.end(JSON.stringify({ result }))),
+      ]);
     })
     .catch(error => {
       return cors(request, response, () => response.end(JSON.stringify({ error: error.message })));
+    })
+    .then(([needs_hard_recompute]) => {
+      // Persist the data here
+      console.log({ needs_hard_recompute });
+      return Promise.resolve(null);
     });
 });

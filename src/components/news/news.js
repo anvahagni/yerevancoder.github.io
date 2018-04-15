@@ -12,19 +12,32 @@ import styles from './news.module.css';
 
 export default withRouter(
   class News extends React.Component {
-    state = { news_postings: new Map(), current_page_index: null, total_pages_count: null };
+    state = {
+      news_postings: new Map(),
+      current_page_index: null,
+      total_pages_count: null,
+      error: null,
+    };
 
-    static contextTypes = { submit_new_news_post: PropTypes.func };
+    static contextTypes = {
+      submit_new_news_post: PropTypes.func,
+      authenticated_user: PropTypes.func,
+    };
 
     query_total_news_postings_count = () =>
       total_news_posting_count_ref.once('value').then(snap_shot => Number(snap_shot.val()));
 
     test_push_data = async () => {
-      const { submit_new_news_post } = this.context;
-      for (const s of TEMP_DATA) {
-        await submit_new_news_post(s);
+      const { submit_new_news_post, authenticated_user } = this.context;
+      const user = authenticated_user();
+      if (user) {
+        for (const s of TEMP_DATA) {
+          await submit_new_news_post(s);
+        }
+        this.forceUpdate();
+      } else {
+        this.setState(() => ({ error: new Error('Must be logged in to push test data') }));
       }
-      this.forceUpdate();
     };
 
     current_page_number = () => {
@@ -47,6 +60,7 @@ export default withRouter(
           page_index: 0,
           count_per_page: NEWS_POSTINGS_PER_PAGE,
         });
+        console.log({ result, error });
         if (result) {
           news_postings.set(0, result);
           this.setState(
@@ -76,7 +90,7 @@ export default withRouter(
         if (postings === null) return null;
         else {
           console.log({ postings });
-          return postings.map(post => {
+          return Object.values(postings).map(post => {
             return <NewsBanner {...post} key={`${Math.random()}`} />;
           });
         }
@@ -84,12 +98,16 @@ export default withRouter(
     }
 
     render() {
-      const { current_page_index } = this.state;
+      const { current_page_index, error } = this.state;
       const num = Number(current_page_index);
       return (
         <div>
           <div className={styles.LatestNewsContainer}>
-            {this.make_posts()}
+            {error === null ? (
+              this.make_posts()
+            ) : (
+              <p className={styles.ErrorOccured}>Error: {error.message}</p>
+            )}
             <div className={styles.TempTestContainer}>
               <p>Current page: {num}</p>
               <input type={'button'} onClick={this.test_push_data} value={'Push Test Data'} />
