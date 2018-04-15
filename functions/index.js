@@ -81,6 +81,8 @@ const last_time_computed_scores_snapshot = () =>
     .once('value')
     .then(snapshot => snapshot.val());
 
+const MINUTES_TILL_FULL_RECOMPUTE = 3;
+
 exports.posts_with_computed_scores = functions.https.onRequest((request, response) => {
   const { page_index: _page_index_, count_per_page: _cpg_ } = request.query;
   const page_index = Number(_page_index_);
@@ -97,7 +99,7 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
       const total_pages_count = Math.ceil(total_count / count_per_page);
       const min_diff = Math.abs(differenceInMinutes(now, last_time));
       return Promise.all([
-        last_time === null ? true : min_diff >= 3,
+        last_time === null ? true : min_diff >= MINUTES_TILL_FULL_RECOMPUTE,
         page_index > total_pages_count || page_index == 0 || page_index == 1,
       ]);
     })
