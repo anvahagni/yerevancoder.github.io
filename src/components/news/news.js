@@ -10,14 +10,18 @@ import TEMP_DATA from './temp-data';
 import NewsBanner from './news-banner';
 import styles from './news.module.css';
 
+const INIT_STATE = {
+  news_postings: new Map(),
+  current_page_index: null,
+  total_pages_count: null,
+  error: null,
+};
+
+const redirect_to_homepage = new Set([0, 1]);
+
 export default withRouter(
   class News extends React.Component {
-    state = {
-      news_postings: new Map(),
-      current_page_index: null,
-      total_pages_count: null,
-      error: null,
-    };
+    state = { ...INIT_STATE };
 
     static contextTypes = {
       submit_new_news_post: PropTypes.func,
@@ -44,9 +48,9 @@ export default withRouter(
       const { search } = this.props.location;
       const page_params = new URLSearchParams(search);
       const value = page_params.get('page');
-      if (value === null) return null;
+      if (value === null) return 0;
       const is_num = is_number(value);
-      return is_num && +value >= 2 ? +value : null;
+      return is_num && +value >= 2 ? Number(value) : 0;
     };
 
     async componentDidMount() {
@@ -55,29 +59,21 @@ export default withRouter(
       const total_count = await this.query_total_news_postings_count();
       const total_pages_count = Math.ceil(total_count / NEWS_POSTINGS_PER_PAGE);
       const page = this.current_page_number();
-      if (page === null || page > total_pages_count) {
-        const { result, error } = await computed_news_posts({
-          page_index: 0,
-          count_per_page: NEWS_POSTINGS_PER_PAGE,
-        });
-        console.log({ result, error });
-        if (result) {
-          news_postings.set(0, result);
-          this.setState(
-            () => ({ current_page_index: 0, news_postings, total_pages_count }),
-            () => history.push(ROUTES.LATEST_NEWS)
-          );
-        }
-      } else {
-        const current_page_index = +page;
-        //   const page_posts = await news_postings_ref
-        //     .orderByChild('post_creation_id')
-        //     .startAt(total_count - NEWS_POSTINGS_PER_PAGE * +page)
-        //     .limitToFirst(NEWS_POSTINGS_PER_PAGE)
-        //     .once('value')
-        //     .then(snapshot => snapshot.val());
-        //   news_postings.set(current_page_index, page_posts ? obj_to_array(page_posts) : []);
-        this.setState(() => ({ current_page_index, news_postings, total_pages_count }));
+      const { result, error } = await computed_news_posts({
+        page_index: page,
+        count_per_page: NEWS_POSTINGS_PER_PAGE,
+      });
+      console.log({ result, error, page });
+      if (result) {
+        news_postings.set(page, result);
+        this.setState(
+          () => ({ current_page_index: page, news_postings, total_pages_count }),
+          () => {
+            if (page > total_pages_count || redirect_to_homepage.has(page)) {
+              history.push(ROUTES.LATEST_NEWS);
+            }
+          }
+        );
       }
     }
 
@@ -87,10 +83,17 @@ export default withRouter(
       else {
         // By this point we can assume the data exists bc of CDM
         const postings = news_postings.get(current_page_index);
-        if (postings === null) return null;
+        if (postings === null || postings === undefined) return null;
         else {
-          console.log({ postings });
-          return Object.values(postings).map(post => {
+          const p = Object.values(postings);
+          p.sort(
+            ({ ranking_score: ranking_score_first }, { ranking_score: ranking_score_second }) => {
+              if (ranking_score_first > ranking_score_second) return -1;
+              if (ranking_score_first < ranking_score_second) return 1;
+              return 0;
+            }
+          );
+          return p.map(post => {
             return <NewsBanner {...post} key={`${Math.random()}`} />;
           });
         }
