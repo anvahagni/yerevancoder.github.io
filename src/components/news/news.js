@@ -3,10 +3,11 @@ import ReactPaginate from 'react-paginate';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { obj_to_array, is_number } from '../../utils/funcs';
+import { obj_to_array, is_number, computed_news_posts } from '../../utils/funcs';
 import { NEWS_POSTINGS_PER_PAGE, ROUTES } from '../../utils/constants';
 import { total_news_posting_count_ref, news_postings_ref } from '../../utils/db';
 import TEMP_DATA from './temp-data';
+import NewsBanner from './news-banner';
 import styles from './news.module.css';
 
 export default withRouter(
@@ -20,7 +21,6 @@ export default withRouter(
 
     test_push_data = async () => {
       const { submit_new_news_post } = this.context;
-      console.log({ TOTAL_TEMP_DATA_LENGTH: TEMP_DATA.length });
       for (const s of TEMP_DATA) {
         await submit_new_news_post(s);
       }
@@ -43,25 +43,26 @@ export default withRouter(
       const total_pages_count = Math.ceil(total_count / NEWS_POSTINGS_PER_PAGE);
       const page = this.current_page_number();
       if (page === null || page > total_pages_count) {
-        const home_page_posts = await news_postings_ref
-          .orderByChild('post_creation_id')
-          .limitToLast(NEWS_POSTINGS_PER_PAGE)
-          .once('value')
-          .then(snapshot => snapshot.val());
-        news_postings.set(0, home_page_posts ? obj_to_array(home_page_posts) : []);
-        this.setState(
-          () => ({ current_page_index: 0, news_postings, total_pages_count }),
-          () => history.push(ROUTES.LATEST_NEWS)
-        );
+        const { result, error } = await computed_news_posts({
+          page_index: 0,
+          count_per_page: NEWS_POSTINGS_PER_PAGE,
+        });
+        if (result) {
+          news_postings.set(0, result);
+          this.setState(
+            () => ({ current_page_index: 0, news_postings, total_pages_count }),
+            () => history.push(ROUTES.LATEST_NEWS)
+          );
+        }
       } else {
         const current_page_index = +page;
-        const page_posts = await news_postings_ref
-          .orderByChild('post_creation_id')
-          .startAt(total_count - NEWS_POSTINGS_PER_PAGE * +page)
-          .limitToFirst(NEWS_POSTINGS_PER_PAGE)
-          .once('value')
-          .then(snapshot => snapshot.val());
-        news_postings.set(current_page_index, page_posts ? obj_to_array(page_posts) : []);
+        //   const page_posts = await news_postings_ref
+        //     .orderByChild('post_creation_id')
+        //     .startAt(total_count - NEWS_POSTINGS_PER_PAGE * +page)
+        //     .limitToFirst(NEWS_POSTINGS_PER_PAGE)
+        //     .once('value')
+        //     .then(snapshot => snapshot.val());
+        //   news_postings.set(current_page_index, page_posts ? obj_to_array(page_posts) : []);
         this.setState(() => ({ current_page_index, news_postings, total_pages_count }));
       }
     }
@@ -72,36 +73,32 @@ export default withRouter(
       else {
         // By this point we can assume the data exists bc of CDM
         const postings = news_postings.get(current_page_index);
-        console.log({ postings });
         if (postings === null) return null;
         else {
+          console.log({ postings });
           return postings.map(post => {
-            return (
-              <div key={`${Math.random()}`}>
-                <p>hi: post_number: {post.post_creation_id}</p>
-              </div>
-            );
+            return <NewsBanner {...post} key={`${Math.random()}`} />;
           });
         }
       }
     }
-
-    next_page = () => {
-      const { history } = this.props;
-      // this.setState(() => ({}))
-      history.push('/latest-news?page=4');
-    };
 
     render() {
       const { current_page_index } = this.state;
       const num = Number(current_page_index);
       return (
         <div>
-          <input type={'button'} onClick={this.test_push_data} value={'Push Test Data'} />
           <div className={styles.LatestNewsContainer}>
             {this.make_posts()}
-            <p>Current page: {num}</p>
-            <input type={'button'} onClick={this.next_page} value={`Go to next page: ${num + 1}`} />
+            <div className={styles.TempTestContainer}>
+              <p>Current page: {num}</p>
+              <input type={'button'} onClick={this.test_push_data} value={'Push Test Data'} />
+              <input
+                type={'button'}
+                onClick={this.next_page}
+                value={`Go to next page: ${num + 1}`}
+              />
+            </div>
           </div>
         </div>
       );

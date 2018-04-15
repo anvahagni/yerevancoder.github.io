@@ -1,4 +1,9 @@
 import { firebase, db } from './db';
+import {
+  COMPUTED_POSTS_CLOUD_FUNCTION_DEV,
+  __DEV__,
+  COMPUTED_POSTS_CLOUD_FUNCTION,
+} from './constants';
 
 export const query_my_freelance_submission = () => {
   const current_user = firebase.auth().currentUser;
@@ -30,3 +35,13 @@ export const no_op = () => null;
 
 export const email_new_job_body = job_detail =>
   encodeURI(`I am interested in your job: ${job_detail} `);
+
+export const computed_news_posts = ({ page_index, count_per_page }) => {
+  const params = new URLSearchParams();
+  params.append('page_index', page_index);
+  params.append('count_per_page', count_per_page);
+  const query = `${
+    __DEV__ ? COMPUTED_POSTS_CLOUD_FUNCTION_DEV : COMPUTED_POSTS_CLOUD_FUNCTION
+  }?${params.toString()}`;
+  return fetch(query).then(r => r.json());
+};
