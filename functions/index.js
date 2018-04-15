@@ -52,10 +52,8 @@ const compute_scores = () =>
     });
   });
 
-const computed_scores_for_db_update = (now, accum, current_value) => {
-  const { post_key, up_votes, posted_at } = current_value;
-  const hour_diff = differenceInHours(new Date(posted_at), now);
-  current_value.ranking_score = calculate_score(up_votes, hour_diff);
+const computed_scores_for_db_update = (accum, current_value) => {
+  const { post_key } = current_value;
   accum[`/news_postings/${post_key}`] = current_value;
   return accum;
 };
@@ -84,14 +82,23 @@ const last_time_computed_scores_snapshot = () =>
     .then(snapshot => snapshot.val());
 
 exports.posts_with_computed_scores = functions.https.onRequest((request, response) => {
-  const { page_index, count_per_page } = request.query;
+  const { page_index: _page_index_, count_per_page: _cpg_ } = request.query;
+  const page_index = Number(_page_index_);
+  const count_per_page = Number(_cpg_);
   last_time_computed_scores_snapshot()
-    .then(last_time => Promise.all([new Date(last_time), new Date(), total_count_news_count()]))
+    .then(last_time =>
+      Promise.all([
+        last_time === null ? null : new Date(last_time),
+        new Date(),
+        total_count_news_count(),
+      ])
+    )
     .then(([last_time, now, total_count]) => {
       const total_pages_count = Math.ceil(total_count / count_per_page);
+      const min_diff = Math.abs(differenceInMinutes(now, last_time));
       return Promise.all([
-        Math.abs(differenceInMinutes(now, last_time)) >= 3,
-        page_index + 1 >= total_pages_count || page_index == 0 || page_index == 1,
+        last_time === null ? true : min_diff >= 3,
+        page_index > total_pages_count || page_index == 0 || page_index == 1,
       ]);
     })
     .then(([needs_hard_recompute, use_home_page]) => {
@@ -107,17 +114,27 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
         return Promise.all([needs_hard_recompute, compute_scores(), use_home_page]);
       } else {
         // needs_hard_recompute === false && use_home_page === false
-        return Promise.all([needs_hard_recompute, []]);
+        return Promise.all([needs_hard_recompute, all_news_snapshot(), use_home_page]);
       }
     })
     .then(([needs_hard_recompute, posts_results, use_home_page]) => {
-      console.log({ posts_results });
-      const grouped = chunk(posts_results, Number(count_per_page));
+      const posts = obj_to_array(posts_results);
+      if (needs_hard_recompute === false && use_home_page === false) {
+        posts.sort(
+          ({ ranking_score: ranking_score_first }, { ranking_score: ranking_score_second }) => {
+            if (ranking_score_first > ranking_score_second) return -1;
+            if (ranking_score_first < ranking_score_second) return 1;
+            return 0;
+          }
+        );
+      }
+      const grouped = chunk(posts, count_per_page);
       const result = use_home_page
         ? grouped[0] !== undefined ? grouped[0] : []
-        : grouped[Number(page_index)];
+        : grouped[page_index - 1];
       return Promise.all([
         needs_hard_recompute,
+        posts_results,
         // Give back the data asap
         cors(request, response, () => response.end(JSON.stringify({ result }))),
       ]);
@@ -125,9 +142,24 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
     .catch(error => {
       return cors(request, response, () => response.end(JSON.stringify({ error: error.message })));
     })
-    .then(([needs_hard_recompute]) => {
-      // Persist the data here
-      console.log({ needs_hard_recompute });
-      return Promise.resolve(null);
+    .then(([needs_hard_recompute, posts_results]) => {
+      if (needs_hard_recompute) {
+        return Promise.all([
+          posts_results,
+          admin
+            .database()
+            .ref('/last-time-recomputed-scores')
+            .set(new Date().getTime()),
+        ]);
+      } else return Promise.all([{}]);
+    })
+    .then(([posts_results]) => {
+      const updates = Object.values(posts_results).reduce(computed_scores_for_db_update, {});
+      if (Object.keys(updates).length !== 0) {
+        return admin
+          .database()
+          .ref()
+          .update(updates);
+      } else return Promise.resolve();
     });
 });
