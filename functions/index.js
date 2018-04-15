@@ -29,9 +29,9 @@ const compute_scores = () =>
     const posts = obj_to_array(rows);
     const mapped = posts.map((post, index) => {
       const their_time = new Date(post.posted_at);
-      const day_diff = differenceInDays(their_time, now);
-      const hour_diff = differenceInHours(their_time, now);
-      const minute_diff = differenceInMinutes(their_time, now);
+      const day_diff = differenceInDays(now, their_time);
+      const hour_diff = differenceInHours(now, their_time);
+      const minute_diff = differenceInMinutes(now, their_time);
       const ranking_score = calculate_score(post.up_votes, hour_diff);
       return { day_diff, hour_diff, minute_diff, ranking_score, index, post };
     });
