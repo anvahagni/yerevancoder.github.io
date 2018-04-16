@@ -23,6 +23,15 @@ const all_news_snapshot = () =>
     .then(snapshot => snapshot.val())
     .then(rows => (rows !== null ? rows : []));
 
+const ranking_sort = (
+  { ranking_score: ranking_score_first },
+  { ranking_score: ranking_score_second }
+) => {
+  if (ranking_score_first > ranking_score_second) return -1;
+  if (ranking_score_first < ranking_score_second) return 1;
+  return 0;
+};
+
 const compute_scores = () =>
   all_news_snapshot().then(rows => {
     const now = new Date();
@@ -35,13 +44,7 @@ const compute_scores = () =>
       const ranking_score = calculate_score(post.up_votes, hour_diff);
       return { day_diff, hour_diff, minute_diff, ranking_score, index, post };
     });
-    mapped.sort(
-      ({ ranking_score: ranking_score_first }, { ranking_score: ranking_score_second }) => {
-        if (ranking_score_first > ranking_score_second) return -1;
-        if (ranking_score_first < ranking_score_second) return 1;
-        return 0;
-      }
-    );
+    mapped.sort(ranking_sort);
     return mapped.map(({ index, day_diff, hour_diff, minute_diff, ranking_score }) => {
       const post = posts[index];
       post.day_diff = day_diff;
@@ -122,13 +125,7 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
     .then(([needs_hard_recompute, posts_results, use_home_page]) => {
       const posts = obj_to_array(posts_results);
       if (needs_hard_recompute === false && use_home_page === false) {
-        posts.sort(
-          ({ ranking_score: ranking_score_first }, { ranking_score: ranking_score_second }) => {
-            if (ranking_score_first > ranking_score_second) return -1;
-            if (ranking_score_first < ranking_score_second) return 1;
-            return 0;
-          }
-        );
+        posts.sort(ranking_sort);
       }
       const grouped = chunk(posts, count_per_page);
       const result = use_home_page
