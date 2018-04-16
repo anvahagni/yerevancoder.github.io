@@ -86,6 +86,8 @@ const last_time_computed_scores_snapshot = () =>
 
 const MINUTES_TILL_FULL_RECOMPUTE = 3;
 
+const will_redirect_to_homepage = new Set([0, 1]);
+
 exports.posts_with_computed_scores = functions.https.onRequest((request, response) => {
   const { page_index: _page_index_, count_per_page: _cpg_ } = request.query;
   const page_index = Number(_page_index_);
@@ -103,7 +105,7 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
       const min_diff = Math.abs(differenceInMinutes(now, last_time));
       return Promise.all([
         last_time === null ? true : min_diff >= MINUTES_TILL_FULL_RECOMPUTE,
-        page_index > total_pages_count || page_index == 0 || page_index == 1,
+        page_index > total_pages_count || will_redirect_to_homepage.has(page_index),
       ]);
     })
     .then(([needs_hard_recompute, use_home_page]) => {
