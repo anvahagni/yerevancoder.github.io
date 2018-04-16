@@ -6,6 +6,8 @@ const differenceInMinutes = require('date-fns/difference_in_minutes');
 const admin = require('firebase-admin');
 const chunk = require('lodash/chunk');
 
+const { ranking_sort } = require('../src-common');
+
 admin.initializeApp();
 
 const calculate_score = (votes, item_hour_age, gravity = 1.8) =>
@@ -22,15 +24,6 @@ const all_news_snapshot = () =>
     .once('value')
     .then(snapshot => snapshot.val())
     .then(rows => (rows !== null ? rows : []));
-
-const ranking_sort = (
-  { ranking_score: ranking_score_first },
-  { ranking_score: ranking_score_second }
-) => {
-  if (ranking_score_first > ranking_score_second) return -1;
-  if (ranking_score_first < ranking_score_second) return 1;
-  return 0;
-};
 
 const compute_scores = () =>
   all_news_snapshot().then(rows => {

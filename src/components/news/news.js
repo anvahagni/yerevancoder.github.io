@@ -9,6 +9,7 @@ import { total_news_posting_count_ref, news_postings_ref } from '../../utils/db'
 import TEMP_DATA from './temp-data';
 import NewsBanner from './news-banner';
 import styles from './news.module.css';
+import { ranking_sort } from '../../../src-common';
 
 const INIT_STATE = {
   news_postings: new Map(),
@@ -86,13 +87,7 @@ export default withRouter(
         if (postings === null || postings === undefined) return null;
         else {
           const p = Object.values(postings);
-          p.sort(
-            ({ ranking_score: ranking_score_first }, { ranking_score: ranking_score_second }) => {
-              if (ranking_score_first > ranking_score_second) return -1;
-              if (ranking_score_first < ranking_score_second) return 1;
-              return 0;
-            }
-          );
+          p.sort(ranking_sort);
           return p.map(post => {
             return <NewsBanner {...post} key={`${Math.random()}`} />;
           });
