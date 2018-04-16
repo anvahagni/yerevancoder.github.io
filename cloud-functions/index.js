@@ -6,7 +6,11 @@ const differenceInMinutes = require('date-fns/difference_in_minutes');
 const admin = require('firebase-admin');
 const chunk = require('lodash/chunk');
 
-const { ranking_sort, NEWS_POSTINGS_PER_PAGE } = require('../src-common');
+const {
+  ranking_sort,
+  NEWS_POSTINGS_PER_PAGE,
+  will_redirect_to_homepage,
+} = require('../src-common');
 
 admin.initializeApp();
 
@@ -78,8 +82,6 @@ const last_time_computed_scores_snapshot = () =>
     .then(snapshot => snapshot.val());
 
 const MINUTES_TILL_FULL_RECOMPUTE = 3;
-
-const will_redirect_to_homepage = new Set([0, 1]);
 
 exports.posts_with_computed_scores = functions.https.onRequest((request, response) => {
   const { page_index: _page_index_ } = request.query;

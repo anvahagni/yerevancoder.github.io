@@ -8,4 +8,5 @@ module.exports = {
     return 0;
   },
   NEWS_POSTINGS_PER_PAGE: 6,
+  will_redirect_to_homepage: new Set([0, 1]),
 };

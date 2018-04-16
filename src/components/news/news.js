@@ -9,7 +9,11 @@ import { total_news_posting_count_ref, news_postings_ref } from '../../utils/db'
 import TEMP_DATA from './temp-data';
 import NewsBanner from './news-banner';
 import styles from './news.module.css';
-import { ranking_sort, NEWS_POSTINGS_PER_PAGE } from '../../../src-common';
+import {
+  ranking_sort,
+  NEWS_POSTINGS_PER_PAGE,
+  will_redirect_to_homepage,
+} from '../../../src-common';
 
 const INIT_STATE = {
   news_postings: new Map(),
@@ -17,8 +21,6 @@ const INIT_STATE = {
   total_pages_count: null,
   error: null,
 };
-
-const redirect_to_homepage = new Set([0, 1]);
 
 export default withRouter(
   class News extends React.Component {
@@ -69,7 +71,7 @@ export default withRouter(
         this.setState(
           () => ({ current_page_index: page, news_postings, total_pages_count }),
           () => {
-            if (page > total_pages_count || redirect_to_homepage.has(page)) {
+            if (page > total_pages_count || will_redirect_to_homepage.has(page)) {
               history.push(ROUTES.LATEST_NEWS);
             }
           }
