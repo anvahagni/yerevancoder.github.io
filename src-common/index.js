@@ -7,4 +7,5 @@ module.exports = {
     if (ranking_score_first < ranking_score_second) return 1;
     return 0;
   },
+  NEWS_POSTINGS_PER_PAGE: 6,
 };

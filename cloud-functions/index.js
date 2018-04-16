@@ -6,7 +6,7 @@ const differenceInMinutes = require('date-fns/difference_in_minutes');
 const admin = require('firebase-admin');
 const chunk = require('lodash/chunk');
 
-const { ranking_sort } = require('../src-common');
+const { ranking_sort, NEWS_POSTINGS_PER_PAGE } = require('../src-common');
 
 admin.initializeApp();
 
@@ -66,7 +66,7 @@ const home_page_snapshot = limit =>
     .database()
     .ref('/news_postings')
     .orderByChild('ranking_score')
-    .limitToLast(limit)
+    .limitToLast(NEWS_POSTINGS_PER_PAGE)
     .once('value')
     .then(snapshot => snapshot.val());
 
@@ -82,9 +82,8 @@ const MINUTES_TILL_FULL_RECOMPUTE = 3;
 const will_redirect_to_homepage = new Set([0, 1]);
 
 exports.posts_with_computed_scores = functions.https.onRequest((request, response) => {
-  const { page_index: _page_index_, count_per_page: _cpg_ } = request.query;
+  const { page_index: _page_index_ } = request.query;
   const page_index = Number(_page_index_);
-  const count_per_page = Number(_cpg_);
   last_time_computed_scores_snapshot()
     .then(last_time =>
       Promise.all([
@@ -94,7 +93,7 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
       ])
     )
     .then(([last_time, now, total_count]) => {
-      const total_pages_count = Math.ceil(total_count / count_per_page);
+      const total_pages_count = Math.ceil(total_count / NEWS_POSTINGS_PER_PAGE);
       const min_diff = Math.abs(differenceInMinutes(now, last_time));
       return Promise.all([
         last_time === null ? true : min_diff >= MINUTES_TILL_FULL_RECOMPUTE,
@@ -103,11 +102,7 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
     })
     .then(([needs_hard_recompute, use_home_page]) => {
       if (needs_hard_recompute === false && use_home_page === true) {
-        return Promise.all([
-          needs_hard_recompute,
-          home_page_snapshot(count_per_page),
-          use_home_page,
-        ]);
+        return Promise.all([needs_hard_recompute, home_page_snapshot(), use_home_page]);
       } else if (needs_hard_recompute === true && use_home_page === true) {
         return Promise.all([needs_hard_recompute, compute_scores(), use_home_page]);
       } else if (needs_hard_recompute === true && use_home_page === false) {
@@ -122,7 +117,7 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
       if (needs_hard_recompute === false && use_home_page === false) {
         posts.sort(ranking_sort);
       }
-      const grouped = chunk(posts, count_per_page);
+      const grouped = chunk(posts, NEWS_POSTINGS_PER_PAGE);
       const result = use_home_page
         ? grouped[0] !== undefined ? grouped[0] : []
         : grouped[page_index - 1];

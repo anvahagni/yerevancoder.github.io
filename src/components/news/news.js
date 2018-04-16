@@ -4,12 +4,12 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { obj_to_array, is_number, computed_news_posts } from '../../utils/funcs';
-import { NEWS_POSTINGS_PER_PAGE, ROUTES } from '../../utils/constants';
+import { ROUTES } from '../../utils/constants';
 import { total_news_posting_count_ref, news_postings_ref } from '../../utils/db';
 import TEMP_DATA from './temp-data';
 import NewsBanner from './news-banner';
 import styles from './news.module.css';
-import { ranking_sort } from '../../../src-common';
+import { ranking_sort, NEWS_POSTINGS_PER_PAGE } from '../../../src-common';
 
 const INIT_STATE = {
   news_postings: new Map(),
@@ -62,7 +62,6 @@ export default withRouter(
       const page = this.current_page_number();
       const { result, error } = await computed_news_posts({
         page_index: page,
-        count_per_page: NEWS_POSTINGS_PER_PAGE,
       });
       console.log({ result, error, page });
       if (result) {
