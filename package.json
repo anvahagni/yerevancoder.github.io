@@ -11,7 +11,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "color": "^3.0.0",
     "date-fns": "^1.29.0",
-    "firebase": "5.0.4",
+    "firebase": "4.13.1",
     "gatsby": "^1.9.271",
     "gatsby-link": "^1.6.44",
     "gatsby-plugin-create-client-paths": "^1.0.8",
@@ -30,6 +30,7 @@
     "gatsby-transformer-remark": "^1.7.43",
     "gatsby-transformer-sharp": "^1.6.26",
     "normalize.css": "^8.0.0",
+    "prismjs": "^1.14.0",
     "prop-types": "^15.6.1",
     "react-collapsible": "^2.2.0",
     "react-headroom": "^2.2.2",
@@ -53,6 +54,6 @@
   "scripts": {
     "dev": "gatsby develop",
     "format": "prettier --trailing-comma es5 --no-semi --single-quote --write 'src/**/*.js'",
-    "deploy": "gatsby build --no-uglify && gh-pages -d public --branch master"
+    "deploy": "gatsby build --no-uglify=true && gh-pages -d public --branch master"
   }
 }
