@@ -8,7 +8,7 @@ import { ROUTES } from '../../utils/constants';
 import { total_news_posting_count_ref, news_postings_ref } from '../../utils/db';
 import TEMP_DATA from './temp-data';
 import NewsBanner from './news-banner';
-import styles from './news.module.css';
+
 import {
   ranking_sort,
   NEWS_POSTINGS_PER_PAGE,

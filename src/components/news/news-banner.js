@@ -1,7 +1,5 @@
 import React from 'react';
 
-import styles from './news-banner.module.css';
-
 export default ({
   posted_at,
   day_diff,
@@ -14,7 +12,7 @@ export default ({
 }) => {
   // console.log(props);
   return (
-    <div className={styles.PostBannerRow}>
+    <div>
       <p>foo</p>
     </div>
   );
