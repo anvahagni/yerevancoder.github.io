@@ -144,7 +144,7 @@ webpackJsonp([107818501498521],{
 
 /***/ }),
 
-/***/ 470:
+/***/ 472:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2159,7 +2159,7 @@ webpackJsonp([107818501498521],{
 	
 	var _reactHelmet2 = _interopRequireDefault(_reactHelmet);
 	
-	var _gatsbyPluginEdComments = __webpack_require__(470);
+	var _gatsbyPluginEdComments = __webpack_require__(472);
 	
 	var _gatsbyPluginEdComments2 = _interopRequireDefault(_gatsbyPluginEdComments);
 	

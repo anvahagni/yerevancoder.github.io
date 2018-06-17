@@ -1,13 +1,13 @@
 webpackJsonp([35783957827783],{
 
-/***/ 387:
+/***/ 388:
 /***/ (function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 529:
+/***/ 532:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -461,7 +461,7 @@ webpackJsonp([35783957827783],{
 	exports.__esModule = true;
 	exports.pageQuery = undefined;
 	
-	__webpack_require__(387);
+	__webpack_require__(388);
 	
 	var _react = __webpack_require__(1);
 	
@@ -471,7 +471,7 @@ webpackJsonp([35783957827783],{
 	
 	var _gatsbyLink2 = _interopRequireDefault(_gatsbyLink);
 	
-	var _reactCollapsible = __webpack_require__(529);
+	var _reactCollapsible = __webpack_require__(532);
 	
 	var _reactCollapsible2 = _interopRequireDefault(_reactCollapsible);
 	
