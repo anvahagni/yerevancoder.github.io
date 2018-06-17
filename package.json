@@ -41,8 +41,7 @@
     "tachyons": "^4.10.0"
   },
   "devDependencies": {
-    "gh-pages": "^1.2.0",
-    "prettier": "^1.13.5"
+    "gh-pages": "^1.2.0"
   },
   "homepage": "https://github.com/yerevancoder/yerevancoder.github.io#readme",
   "keywords": [
@@ -64,7 +63,6 @@
   },
   "scripts": {
     "dev": "gatsby develop",
-    "format": "prettier --trailing-comma es5 --no-semi --single-quote --write 'src/**/*.js'",
     "deploy": "gatsby build --no-uglify=true && gh-pages -d public --branch master"
   }
 }
