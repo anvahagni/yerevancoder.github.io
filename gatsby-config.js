@@ -7,6 +7,7 @@ module.exports = {
   },
   pathPrefix: '/',
   plugins: [
+    `gatsby-plugin-sass`,
     {
       resolve: `gatsby-plugin-ed-comments`,
       options: {
