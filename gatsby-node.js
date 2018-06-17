@@ -1,15 +1,6 @@
 const _ = require('lodash');
 const path = require('path');
 const { createFilePath } = require('gatsby-source-filesystem');
-const fs = require('fs');
-
-exports.modifyWebpackConfig = ({ config, stage }) => {
-  // https://www.gatsbyjs.org/docs/add-custom-webpack-config/
-  if (stage === 'build-css') {
-    fs.copyFileSync('node_modules/tachyons/css/tachyons.css', 'public/tachyons.css');
-    fs.copyFileSync('node_modules/normalize.css/normalize.css', 'public/normalize.css');
-  }
-};
 
 exports.createPages = ({ graphql, boundActionCreators }) => {
   const { createPage } = boundActionCreators;
