@@ -7,7 +7,13 @@ module.exports = {
   },
   pathPrefix: '/',
   plugins: [
-    `gatsby-plugin-sass`,
+    'gatsby-plugin-sass',
+    {
+      resolve: 'gatsby-plugin-resolve-src',
+      options: {
+        addSassLoader: false,
+      },
+    },
     {
       resolve: `gatsby-plugin-ed-comments`,
       options: {
