@@ -1,4 +1,5 @@
 module.exports = {
+  proxy: { prefix: '/', url: 'http://localhost:5000' },
   siteMetadata: {
     title: 'yerevancoder',
     author: 'Coders of Armenia',
