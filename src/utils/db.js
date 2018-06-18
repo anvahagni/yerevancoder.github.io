@@ -1,4 +1,9 @@
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+// Load up side effects
+import 'firebase/auth';
+import 'firebase/functions';
+import 'firebase/database';
+
 import { __DEV__ } from './constants';
 
 let config = null;
