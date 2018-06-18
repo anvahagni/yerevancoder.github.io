@@ -187,9 +187,28 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
+"@types/body-parser@*":
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.0.tgz#9f5c9d9bd04bb54be32d5eb9fc0d8c974e6cf58c"
+  dependencies:
+    "@types/connect" "*"
+    "@types/node" "*"
+
 "@types/configstore@^2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@types/configstore/-/configstore-2.1.1.tgz#cd1e8553633ad3185c3f2f239ecff5d2643e92b6"
+
+"@types/connect@*":
+  version "3.4.32"
+  resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.32.tgz#aa0e9616b9435ccad02bc52b5b454ffc2c70ba28"
+  dependencies:
+    "@types/node" "*"
+
+"@types/cors@^2.8.1":
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.4.tgz#50991a759a29c0b89492751008c6af7a7c8267b0"
+  dependencies:
+    "@types/express" "*"
 
 "@types/debug@^0.0.29":
   version "0.0.29"
@@ -202,6 +221,22 @@
 "@types/events@*":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
+
+"@types/express-serve-static-core@*":
+  version "4.16.0"
+  resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.16.0.tgz#fdfe777594ddc1fe8eb8eccce52e261b496e43e7"
+  dependencies:
+    "@types/events" "*"
+    "@types/node" "*"
+    "@types/range-parser" "*"
+
+"@types/express@*", "@types/express@^4.11.1":
+  version "4.16.0"
+  resolved "https://registry.yarnpkg.com/@types/express/-/express-4.16.0.tgz#6d8bc42ccaa6f35cf29a2b7c3333cb47b5a32a19"
+  dependencies:
+    "@types/body-parser" "*"
+    "@types/express-serve-static-core" "*"
+    "@types/serve-static" "*"
 
 "@types/get-port@^0.0.4":
   version "0.0.4"
@@ -219,6 +254,20 @@
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
 
+"@types/jsonwebtoken@^7.2.6":
+  version "7.2.7"
+  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-7.2.7.tgz#5dd62e0c0a0c6f211c3c1d13d322360894625b47"
+  dependencies:
+    "@types/node" "*"
+
+"@types/lodash@^4.14.34":
+  version "4.14.109"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.109.tgz#b1c4442239730bf35cabaf493c772b18c045886d"
+
+"@types/mime@*":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
+
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
@@ -234,6 +283,10 @@
 "@types/node@^7.0.11":
   version "7.0.66"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.66.tgz#3d1dc4d6f52e484e843806ff456379f7e6ad5553"
+
+"@types/range-parser@*":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.2.tgz#fa8e1ad1d474688a757140c91de6dace6f4abc8d"
 
 "@types/react-router-dom@^4.2.2":
   version "4.2.7"
@@ -255,6 +308,13 @@
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.3.18.tgz#bf195aed4d77dc86f06e4c9bb760214a3b822b8d"
   dependencies:
     csstype "^2.2.0"
+
+"@types/serve-static@*":
+  version "1.13.2"
+  resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.2.tgz#f5ac4d7a6420a99a6a45af4719f4dcd8cd907a48"
+  dependencies:
+    "@types/express-serve-static-core" "*"
+    "@types/mime" "*"
 
 "@types/tmp@^0.0.32":
   version "0.0.32"
@@ -2698,6 +2758,13 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
+cors@^2.8.4:
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/cors/-/cors-2.8.4.tgz#2bd381f2eb201020105cd50ea59da63090694686"
+  dependencies:
+    object-assign "^4"
+    vary "^1"
+
 crc32-stream@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/crc32-stream/-/crc32-stream-2.0.0.tgz#e3cdd3b4df3168dd74e3de3fbbcb7b297fe908f4"
@@ -3826,7 +3893,7 @@ express@4.16.2:
     utils-merge "1.0.1"
     vary "~1.1.2"
 
-express@^4.13.3, express@^4.14.0:
+express@^4.13.3, express@^4.14.0, express@^4.16.2:
   version "4.16.3"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.3.tgz#6af8a502350db3246ecc4becf6b5a34d22f7ed53"
   dependencies:
@@ -4169,6 +4236,19 @@ fined@^1.0.1:
     object.defaults "^1.1.0"
     object.pick "^1.2.0"
     parse-filepath "^1.0.1"
+
+firebase-functions@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/firebase-functions/-/firebase-functions-1.0.4.tgz#3302d9234de6d708fd8cb24aa5db872cc8953919"
+  dependencies:
+    "@types/cors" "^2.8.1"
+    "@types/express" "^4.11.1"
+    "@types/jsonwebtoken" "^7.2.6"
+    "@types/lodash" "^4.14.34"
+    cors "^2.8.4"
+    express "^4.16.2"
+    jsonwebtoken "^8.2.1"
+    lodash "^4.6.1"
 
 firebase-tools@^3.18.6:
   version "3.18.6"
@@ -8011,7 +8091,7 @@ object-assign@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-3.0.0.tgz#9bedd5ca0897949bca47e7ff408062d549f587f2"
 
-object-assign@^4.0.0, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
+object-assign@^4, object-assign@^4.0.0, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
@@ -12168,7 +12248,7 @@ value-equal@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-0.4.0.tgz#c5bdd2f54ee093c04839d71ce2e4758a6890abc7"
 
-vary@~1.1.2:
+vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
 
