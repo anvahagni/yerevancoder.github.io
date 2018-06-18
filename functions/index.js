@@ -6,11 +6,7 @@ const differenceInMinutes = require('date-fns/difference_in_minutes');
 const admin = require('firebase-admin');
 const chunk = require('lodash/chunk');
 
-const {
-  ranking_sort,
-  NEWS_POSTINGS_PER_PAGE,
-  will_redirect_to_homepage,
-} = require('../src-common');
+const { ranking_sort, NEWS_POSTINGS_PER_PAGE, will_redirect_to_homepage } = require('./common');
 
 admin.initializeApp();
 
@@ -81,27 +77,34 @@ const last_time_computed_scores_snapshot = () =>
     .once('value')
     .then(snapshot => snapshot.val());
 
-const MINUTES_TILL_FULL_RECOMPUTE = 3;
+const MINUTES_TILL_FULL_RECOMPUTE = 300;
 
-exports.posts_with_computed_scores = functions.https.onRequest((request, response) => {
-  const { page_index: _page_index_ } = request.query;
-  const page_index = Number(_page_index_);
+const needs_hard_recompute = () =>
   last_time_computed_scores_snapshot()
-    .then(last_time =>
-      Promise.all([
-        last_time === null ? null : new Date(last_time),
-        new Date(),
-        total_count_news_count(),
-      ])
-    )
-    .then(([last_time, now, total_count]) => {
-      const total_pages_count = Math.ceil(total_count / NEWS_POSTINGS_PER_PAGE);
+    .then(last_time => Promise.all([last_time === null ? null : new Date(last_time), new Date()]))
+    .then(([last_time, now]) => {
       const min_diff = Math.abs(differenceInMinutes(now, last_time));
-      return Promise.all([
-        last_time === null ? true : min_diff >= MINUTES_TILL_FULL_RECOMPUTE,
-        page_index > total_pages_count || will_redirect_to_homepage.has(page_index),
-      ]);
-    })
+      return last_time === null ? true : min_diff >= MINUTES_TILL_FULL_RECOMPUTE;
+    });
+
+const should_use_homepage = ({ page_index }) =>
+  total_count_news_count().then(total_count => {
+    const total_pages_count = Math.ceil(total_count / NEWS_POSTINGS_PER_PAGE);
+    return page_index > total_pages_count || will_redirect_to_homepage.has(page_index);
+  });
+
+exports.front_page_news = functions.https.onCall((data, context) => {
+  console.log(context);
+  return {
+    example: 10,
+    more: 'hello',
+  };
+});
+
+exports.posts_with_computed_score = functions.https.onCall((data, context) => {
+  const { page_index: _page_index_ } = data;
+  const page_index = Number(_page_index_);
+  return Promise.all([needs_hard_recompute(), should_use_homepage({ page_index })])
     .then(([needs_hard_recompute, use_home_page]) => {
       if (needs_hard_recompute === false && use_home_page === true) {
         return Promise.all([needs_hard_recompute, home_page_snapshot(), use_home_page]);
@@ -121,17 +124,11 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
       }
       const grouped = chunk(posts, NEWS_POSTINGS_PER_PAGE);
       const result = use_home_page
-        ? grouped[0] !== undefined ? grouped[0] : []
+        ? grouped[0] !== undefined
+          ? grouped[0]
+          : []
         : grouped[page_index - 1];
-      return Promise.all([
-        needs_hard_recompute,
-        posts_results,
-        // Give back the data asap
-        cors(request, response, () => response.end(JSON.stringify({ result }))),
-      ]);
-    })
-    .catch(error => {
-      return cors(request, response, () => response.end(JSON.stringify({ error: error.message })));
+      return Promise.all([needs_hard_recompute, posts_results]);
     })
     .then(([needs_hard_recompute, posts_results]) => {
       if (needs_hard_recompute) {
@@ -151,6 +148,6 @@ exports.posts_with_computed_scores = functions.https.onRequest((request, respons
           .database()
           .ref()
           .update(updates);
-      } else return Promise.resolve();
+      } else return null;
     });
 });
