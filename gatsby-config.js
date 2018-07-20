@@ -18,9 +18,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-ed-comments`,
       options: {
-        commentsServerUrl: 'https://comments-for-yerevancoder-com.ed.community',
-        commentsScriptUrl:
-          'https://comments-for-yerevancoder-com.ed.community/-/ed-comments.v0.min.js',
+        commentsServerUrl: 'https://comments-for-yerevancoder-com.talkyard.net',
+        commentsScriptUrl: 'https://cdn.talkyard.net/-/talkyard-comments.min.js',
       },
     },
     {

@@ -58,7 +58,7 @@
   },
   "scripts": {
     "dev": "gatsby develop",
-    "postinstall": "cd cloud-functions && yarn",
+    "postinstall": "cd ./functions && yarn",
     "deploy": "gatsby build --no-uglify=true && gh-pages -d public --branch master",
     "local-serve-fcf": "cd functions && source ~/.nvm/nvm.sh && nvm exec 6.11.5 npm run serve"
   }

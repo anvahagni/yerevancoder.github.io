@@ -13,7 +13,7 @@ import {
   ranking_sort,
   NEWS_POSTINGS_PER_PAGE,
   will_redirect_to_homepage,
-} from '../../../src-common';
+} from '../../../src/common';
 
 const INIT_STATE = {
   news_postings: new Map(),
